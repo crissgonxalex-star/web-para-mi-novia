@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Para ti 💛</title>
+  <style>
+    :root {
+      --bg-start: #fff8dc;
+      --bg-middle: #ffef8a;
+      --bg-end: #ffd633;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --accent: #ffcc33;
+      --text-color: #4a3b00;
+      --shadow-color: rgba(255, 204, 51, 0.4);
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: radial-gradient(circle at top left, var(--bg-start), var(--bg-middle), var(--bg-end));
+      color: var(--text-color);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: -50px;
+      left: -50px;
+      width: 150vw;
+      height: 150vh;
+      background: repeating-radial-gradient(circle at center, rgba(255 204 51 / 0.1) 0 20px, transparent 20px 40px);
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(40px);
+    }
+    .center {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .card {
+      width: 100%;
+      max-width: 880px;
+      background: var(--card-bg);
+      border-radius: 18px;
+      box-shadow: 0 12px 40px var(--shadow-color);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--accent);
+      backdrop-filter: saturate(180%) blur(12px);
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 16px 50px var(--shadow-color);
+    }
+    h1 {
+      font-size: 32px;
+      margin: 0 0 12px;
+      text-shadow: 1px 1px 2px rgba(255 204 51 / 0.5);
+    }
+    p.lead {
+      color: #6b5b00;
+      margin: 0 0 20px;
+      font-size: 18px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #4a3b00;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(255 204 51 / 0.6);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+    .btn:hover {
+      background: #ffdb4d;
+      box-shadow: 0 6px 14px rgba(255 204 51 / 0.8);
+    }
+    .letterWrap {
+      display: none;
+      padding: 28px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      margin-top: 28px;
+      box-shadow: 0 6px 15px rgba(255 204 51 / 0.3);
+      line-height: 1.6;
+      font-size: 19px;
+      color: var(--text-color);
+      white-space: pre-wrap;
+      min-height: 140px;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+    .thumb {
+      background: rgba(255, 255, 255, 0.75);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      padding-top: 66%;
+      box-shadow: 0 4px 14px rgba(255 204 51 / 0.25);
+      transition: transform 0.3s ease;
+    }
+    .thumb:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(255 204 51 / 0.5);
+    }
+    .thumb img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+    .caption {
+      position: absolute;
+      left: 8px;
+      bottom: 8px;
+      background: rgba(0, 0, 0, 0.45);
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      color: #fff;
+      font-weight: 600;
+      user-select: none;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+    }
+  </style>
+</head>
+<body>
+  <div class="center">
+    <div class="card" id="card">
+      <h1>Hola, corazón ❤️</h1>
+      <p class="lead">Tengo algo hecho especialmente para ti. Pulsa el botón y abre tu sorpresa.</p>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap: wrap;">
+        <button class="btn" id="openBtn">💌 Abrir regalo</button>
+        <button class="btn" id="playBtn">▶️ Reproducir música</button>
+      </div>
+      <audio id="bgAudio" src="uys.mp3" preload="none"></audio>
+      <div class="letterWrap" id="letterWrap">
+        <div class="letter" id="letter"></div>
+      </div>
+      <div class="gallery">
+        <div class="thumb"><img src="foto1.jpeg" alt=""><div class="caption">Nuestra primer foto juntos</div></div>
+        <div class="thumb"><img src="foto2.jpeg" alt=""><div class="caption">Nuestra primer salida</div></div>
+        <div class="thumb"><img src="foto3.jpeg" alt=""><div class="caption">Un momento especial</div></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const openBtn = document.getElementById('openBtn');
+    const letterWrap = document.getElementById('letterWrap');
+    const letter = document.getElementById('letter');
+    const playBtn = document.getElementById('playBtn');
+    const bgAudio = document.getElementById('bgAudio');
+    let playing = false;
+
+    playBtn.addEventListener('click', () => {
+      if (!playing) {
+        bgAudio.play();
+        playing = true;
+        playBtn.textContent = '⏸️ Pausar música';
+      } else {
+        bgAudio.pause();
+        playing = false;
+        playBtn.textContent = '▶️ Reproducir música';
+      }
+    });
+
+    const message = `Hola, corazón 💛
+
+Desde que llegaste a mi vida, todo tiene más color y alegría. Cada momento contigo se siente como un regalo y cada sonrisa tuya me enamora más. Gracias por ser mi lugar seguro, mi risa favorita y mi razón de soñar. Te amo con todo mi ser.`;
+
+    openBtn.addEventListener('click', () => {
+      letterWrap.style.display = 'block';
+      typeText(letter, message);
+    });
+
+    function typeText(el, text, speed = 35) {
+      el.textContent = '';
+      let i = 0;
+      const t = setInterval(() => {
+        el.textContent += text[i] || '';
+        i++;
+        if (i > text.length) {
+          clearInterval(t);
+        }
+      }, speed);
+    }
+  </script>
+</body>
+</html>
